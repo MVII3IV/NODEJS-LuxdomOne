@@ -1,0 +1,95 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h1>
+            Rutinas
+        </h1>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+
+
+                <thead>
+                    <tr>
+                        <th>ID. Rutina</th>
+                        <th>Dias</th>
+                        <th>Hora de Encendido</th>
+                        <th>Hora de Apagado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+
+                    <tr ng-repeat="routine in routines">
+                        <td>
+                            <button style="margin:7px" class="btn btn-default" ng-repeat="device in routine.devices">{{device.name}}</button>
+                        </td>
+                        <th>
+                            <button ng-class="day.class" ng-repeat="day in routine.days" style="margin:7px;width:40px" ng-click="setDay(day)">{{day.day}}</button>
+                        </th>
+                        <td editable-text="routine.timeOn" onaftersave="updateRoutineFromDB(routine)">{{routine.timeOn}}</td>
+                        <td editable-text="routine.timeOff" onaftersave="updateRoutineFromDB(routine)">{{routine.timeOff}}</td>
+                        <td>
+                            <button class="btn btn-danger" ng-click="removeRoutineFromDB(routine)">
+                                <i class="fa fa-times" aria-hidden="true"></i> &nbsp Eliminar
+                            </button>
+                        </td>
+                    </tr>
+
+
+
+
+
+                    <tr>
+
+                        <td>
+                            <select class="form-control" ng-model="selectedDevice" ng-change="addDeviceToRoutine(this.id)" ng-options="device as device.name for device in devices"> 
+									<option value="">Selecciona tus dispositivos</option>
+                            </select>
+                            <div class="label label-default" ng-repeat="device in addedDeviceToRoutine" style="margin-right: 5px; margin-top: 3px;">
+                                {{device.name}} <span class="glyphicon glyphicon-remove" style="top: 2px;" aria-hidden="true"
+                                    ng-click="removeDeviceFromCorutine(device)"></span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <button ng-class="day.class" ng-repeat="day in days" style="margin:7px;width:40px" ng-click="setDayOnModel(day)">{{day.day}}</button>
+                        </td>
+
+                        <td>
+                            <div class="input-group bootstrap-timepicker timepicker">
+                                <input id="timepicker1" type="text" class="form-control input-small" ng-model="timeOn">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="input-group bootstrap-timepicker timepicker">
+                                <input id="timepicker2" type="text" class="form-control input-small" ng-model="timeOff">
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                            </div>
+                        </td>
+
+                        <td>
+                            <button type="button" class="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="registerNewRoutine(newDevice)">
+                              <i class="fa fa-plus" aria-hidden="true"></i>
+                              &nbsp Agregar
+                            </button>
+                        </td>
+
+                    </tr>
+
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#timepicker1').timepicker('setTime', '12:00 PM');
+        $('#timepicker2').timepicker('setTime', '12:00 PM');
+    </script>

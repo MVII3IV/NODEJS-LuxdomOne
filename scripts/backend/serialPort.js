@@ -1,0 +1,62 @@
+var SerialPort = require('serialport');
+
+var port = '/dev/ttyUSB0';
+
+if (process.platform.includes('win'))
+    port = 'COM3';
+
+var portSerial = new SerialPort(port, {
+    baudRate: 9600,
+    parser: SerialPort.parsers.readline('\r\n')
+});
+
+SerialPort.list(function (err, ports) {
+    console.log("Serial Devices:");
+    ports.forEach(function (portSerial) {
+        console.log("comName: " + comName + ", manufacturer: " + portSerial.manufacturer);
+    });
+});
+
+portSerial.on('open', function () {
+
+});
+
+// open errors will be emitted as an error event
+portSerial.on('error', function (err) {
+    console.log('Error: ', err.message);
+})
+
+portSerial.on('data', function (data) {
+    console.log(data);
+});
+
+portSerial.on('disconnect', function (data) {
+    console.log(data);
+});
+
+//{"deviceId":"0013A200_40EAE365","relay":1,"instruction":0}
+var writeSerial = function (message) {
+    message = JSON.stringify(message) + "\n";
+    portSerial.write(message, function (err) {
+        if (err) {
+            console.log('Error on write: ', err.message);
+        } else {
+            console.log('Serial Message Sent : ' + message);
+        }
+
+    });
+};
+
+var sendMessageByDevice = function(device){
+    writeSerial({
+    "id": device.xbee_id, //deviceId
+    "rel": device.relay, //relay
+    "ins": device.state, //instruction
+    "typ": device.type
+  });
+};
+
+module.exports = {
+    writeSerial: writeSerial,
+    sendMessageByDevice: sendMessageByDevice
+}
