@@ -13,7 +13,7 @@ var portSerial = new SerialPort(port, {
 SerialPort.list(function (err, ports) {
     console.log("Serial Devices:");
     ports.forEach(function (portSerial) {
-        console.log("comName: " + comName + ", manufacturer: " + portSerial.manufacturer);
+        console.log("comName: " + portSerial.comName + ", manufacturer: " + portSerial.manufacturer);
     });
 });
 
