@@ -64,6 +64,8 @@ var actionPerformer = function (device, routine) {
         hour12: true
     });
 
+    console.log('Current time: ' + currentTime + ' Scheduled time: ' + routine.time_on );
+
     if (routine.time_on == currentTime) {
         deviceController.turnOnDevice(device);
     }
