@@ -1,6 +1,7 @@
 var Q = require('q');
 var serialPort = require('./serialPort.js');
 var wsClient = require('./webSockets.js');
+var dateFormat = require('dateformat');
 
 //Models
 var routineModel = require('./models/routine.js');
@@ -57,13 +58,15 @@ setInterval(function () {
 
 
 var actionPerformer = function (device, routine) {
-
+    /*
     var currentTime = new Date().toLocaleString('en-US', {
         hour: 'numeric',
         minute: 'numeric',
         hour12: true
     });
+    */
 
+    var currentTime = dateFormat("shortTime");   
     console.log('Current time: ' + currentTime + ' Scheduled time: ' + routine.time_on );
 
     if (routine.time_on == currentTime) {
