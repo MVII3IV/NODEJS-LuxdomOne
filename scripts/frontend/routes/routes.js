@@ -13,6 +13,11 @@ angular.module("app").config(
             controller: 'deviceController'
         })
 
+        .when('/access', {
+            templateUrl: 'pages/access/access.html',
+            controller: 'deviceController'
+        })
+
         .when('/cp/devices', {
             templateUrl: 'pages/control-panel/device-manager.html',
             controller: 'deviceController'
