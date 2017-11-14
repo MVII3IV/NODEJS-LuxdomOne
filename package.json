@@ -13,6 +13,7 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-handlebars": "^3.0.0",
+    "mongoose": "^4.13.2",
     "nodemon": "^1.11.0",
     "q": "^1.5.0",
     "sequelize": "^4.2.0",

@@ -1,18 +1,8 @@
-//var devices = require('./scripts/devices.json');
 var bodyParser = require('body-parser');
 var express = require('express');
+var mongoose = require('mongoose');
+var DeviceModel = require('./scripts/backend/models/deviceModel.js');
 
-
-var webSockets = require('./scripts/backend/webSockets.js');
-var serialPort = require('./scripts/backend/serialPort.js');
-var scheduler = require('./scripts/backend/scheduler.js');
-
-
-//models
-var DeviceModel = require('./scripts/backend/models/device.js');
-var RoutineModel = require('./scripts/backend/models/routine.js');
-var TypesModel = require('./scripts/backend/models/types.js');
-var DaysRoutine = require('./scripts/backend/models/daysRoutine.js');
 
 
 
@@ -23,10 +13,39 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+
+
+
 var port = 80;
 app.listen(port, function (error) {
     console.log("running server at port: " + port);
 });
+
+
+
+
+mongoose.connect('mongodb://localhost/luxdomOne');
+var db = mongoose.connection;
+
+db.on('error', function(err){
+    console.log(err);
+});
+db.on('open', function(){
+    console.log('>DB connected');   
+});
+
+
+
+
+
+
+var webSockets = require('./scripts/backend/webSockets.js');
+var serialPort = require('./scripts/backend/serialPort.js');
+var scheduler = require('./scripts/backend/scheduler.js');
+
+
+
+
 
 
 
@@ -36,9 +55,15 @@ app.use(express.static('scripts/frontend/'));
 
 
 
+//Routes
+var deviceRouter = require('./scripts/backend/routes/deviceRoutes.js')(DeviceModel);
+app.use('/api/devices', deviceRouter);
 
 
+
+/*
 app.get('/devices', function (req, res) {
+    
     DeviceModel.findAll().then(function (devices) {
         res.send(devices);
     });
@@ -61,3 +86,4 @@ app.get('/days-routine', function (req, res) {
         res.send(days);
     });
 });
+*/
