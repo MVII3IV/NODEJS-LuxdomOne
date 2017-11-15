@@ -6,7 +6,7 @@ angular.module("app").service("deviceService", function () {
         "action": "Apagado",
         "class": "primary",
         "state": false,
-        "xbee_id": "0013A200_40EAE365",
+        "xbeeId": "",
         "type": "",
         "watts": 0
     }

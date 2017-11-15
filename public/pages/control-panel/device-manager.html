@@ -25,7 +25,7 @@
                         <td editable-text="device.relay" onaftersave="updateDeviceFromDB(device)">{{device.relay}}</td>
                         <td editable-text="device.type" onaftersave="updateDeviceFromDB(device)">{{device.type}}</td>
                         <td editable-text="device.watts" onaftersave="updateDeviceFromDB(device)">{{device.watts}}</td>
-                        <td editable-text="device.xbee_id" onaftersave="updateDeviceFromDB(device)">{{device.xbee_id}}</td>
+                        <td editable-text="device.xbeeId" onaftersave="updateDeviceFromDB(device)">{{device.xbeeId}}</td>
                         <td>
                             <button class="btn btn-danger" ng-click="removeDeviceFromDB(device)">
                                 <i class="fa fa-times" aria-hidden="true"></i> &nbsp Eliminar
@@ -52,7 +52,7 @@
                             <input type="number" min="1" max="200" class="form-control" placeholder="Escribe el consumo en watts..." required ng-model="newDevice.watts"/>
                         </td>
                         <td>
-                            <input type="text" class="form-control" placeholder="Xbee Id" required ng-model="newDevice.xbee_id"/>
+                            <input type="text" class="form-control" placeholder="xxxxxxxx_xxxxxxxx" required ng-model="newDevice.xbeeId"/>
                         </td>
 
                         <td>

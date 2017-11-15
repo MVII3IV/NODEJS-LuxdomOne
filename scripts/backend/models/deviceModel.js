@@ -20,11 +20,11 @@ var devicesModel = new Schema({
   state: {
     type: Boolean
   },
-  xbee_id: {
+  xbeeId: {
     type: String
   },
   type: {
-    type: String
+    type: Number
   },
   watts: {
     type: Number
@@ -32,3 +32,20 @@ var devicesModel = new Schema({
 });
 
 module.exports = mongoose.model('devices', devicesModel);
+
+
+
+
+
+/*
+{
+	"name": "test",
+    "relay": 0,
+    "action":"Apagado",
+    "class": "primary",
+    "state": 0,
+    "xbeeId": "0013A200_40EAE365",
+    "type": 1,
+    "watts": 13
+}
+*/

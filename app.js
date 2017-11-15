@@ -1,7 +1,10 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var mongoose = require('mongoose');
-var DeviceModel = require('./scripts/backend/models/deviceModel.js');
+
+//models
+var Devices = require('./scripts/backend/models/deviceModel');
+var Types = require('./scripts/backend/models/typesModel');
 
 
 
@@ -15,6 +18,11 @@ app.use(bodyParser.json());
 
 
 
+//load all files
+app.use(express.static('public'));
+app.use(express.static('scripts/frontend/'));
+
+
 
 var port = 80;
 app.listen(port, function (error) {
@@ -24,14 +32,18 @@ app.listen(port, function (error) {
 
 
 
-mongoose.connect('mongodb://localhost/luxdomOne');
+mongoose.connect('mongodb://localhost/luxdomOne', {
+    useMongoClient: true
+});
+mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 
-db.on('error', function(err){
+
+db.on('error', function (err) {
     console.log(err);
 });
-db.on('open', function(){
-    console.log('>DB connected');   
+db.on('open', function () {
+    console.log('>DB connected');
 });
 
 
@@ -39,51 +51,15 @@ db.on('open', function(){
 
 
 
-var webSockets = require('./scripts/backend/webSockets.js');
-var serialPort = require('./scripts/backend/serialPort.js');
-var scheduler = require('./scripts/backend/scheduler.js');
-
-
-
-
-
-
-
-//load all files
-app.use(express.static('public'));
-app.use(express.static('scripts/frontend/'));
+var webSockets = require('./scripts/backend/webSockets')(Devices, Types);
+//var serialPort = require('./scripts/backend/serialPort.js');
+//var scheduler = require('./scripts/backend/scheduler.js');
 
 
 
 //Routes
-var deviceRouter = require('./scripts/backend/routes/deviceRoutes.js')(DeviceModel);
+var deviceRouter = require('./scripts/backend/routes/deviceRoutes')(Devices);
+var typesRouter = require('./scripts/backend/routes/typeRouter')(Types);
+
 app.use('/api/devices', deviceRouter);
-
-
-
-/*
-app.get('/devices', function (req, res) {
-    
-    DeviceModel.findAll().then(function (devices) {
-        res.send(devices);
-    });
-});
-
-app.get('/routines', function (req, res) {
-    RoutineModel.findAll().then(function (routines) {
-        res.send(routines);
-    });
-});
-
-app.get('/types', function (req, res) {
-    TypesModel.findAll().then(function (types) {
-        res.send(types);
-    });
-});
-
-app.get('/days-routine', function (req, res) {
-    DaysRoutine.findAll().then(function (days) {
-        res.send(days);
-    });
-});
-*/
+app.use('/api/types', typesRouter);

@@ -9,11 +9,11 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
         $scope.newDevice = deviceService.newDevice;
 
 
-        $http.get('/types').then(function (response) {
+        $http.get('/api/types').then(function (response) {
             $scope.types = response.data;
         });
 
-        $http.get('/devices').then(function (response) {
+        $http.get('/api/devices').then(function (response) {
             $scope.devices = response.data;
         });
 
@@ -50,8 +50,6 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
 
         $scope.registerNewDevice = function (device) {
             device.relay -= 1;
-            device.xbee_id = "0013A200_40EAE365"; //improove this line
-            device.type = device.type.id;
             wsClient.sendMessage(wsClient.WebSocketsMessageType.SAVE_DEVICE, device);
         };
 
