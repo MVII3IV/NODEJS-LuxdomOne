@@ -9,13 +9,19 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
         $scope.newDevice = deviceService.newDevice;
 
 
-        $http.get('/api/types').then(function (response) {
-            $scope.types = response.data;
-        });
+        $http.get('/api/types')
+            .then(function (response) {
+                $scope.types = response.data;
+            }).catch(function (err) {
+                console.log(err);
+            });
 
-        $http.get('/api/devices').then(function (response) {
-            $scope.devices = response.data;
-        });
+        $http.get('/api/devices')
+            .then(function (response) {
+                $scope.devices = response.data;
+            }).catch(function (err) {
+                console.log(err);
+            });
 
 
         wsClient.ws.onmessage = function (msg) {
@@ -46,17 +52,14 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
 
         $scope.toggle = function (device) {
             //wsClient.sendMessage(wsClient.WebSocketsMessageType.ORDER_INSTRUCTION, device);
-            $http.post('/api/devices/toggle', device)
-                .then(function (res) {
-                    console.log(res);
-                }).catch(function (err) {
-                    console.log(err);
-                });
+            postData('/api/devices/toggle', device);
         };
 
         $scope.registerNewDevice = function (device) {
+            //wsClient.sendMessage(wsClient.WebSocketsMessageType.SAVE_DEVICE, device);
             device.relay -= 1;
-            wsClient.sendMessage(wsClient.WebSocketsMessageType.SAVE_DEVICE, device);
+            device.type = device.type.id;
+            postData('/api/devices/', device);
         };
 
         $scope.removeDeviceFromDB = function (device) {
@@ -67,6 +70,13 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
             wsClient.sendMessage(wsClient.WebSocketsMessageType.UPDATE_DEVICE, device);
         };
 
-
+        function postData(URL, data) {
+            $http.post(URL, data)
+                .then(function (res) {
+                    console.log(res);
+                }).catch(function (err) {
+                    console.log(err);
+                });
+        }
     }
 ]);

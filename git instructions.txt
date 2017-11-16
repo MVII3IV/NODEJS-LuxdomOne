@@ -1,2 +1,8 @@
 clone from branch
 git clone -b <branch> <remote_repo>
+
+
+push canche to branch
+git add .
+git commit -am "text"
+git push origin BRANCH

@@ -12,6 +12,10 @@ var routes = function (Device) {
             res.sendStatus(200);
         });
 
+
+
+
+
     deviceRouter.route('/')
         .get(
             function (req, res) {
@@ -36,7 +40,7 @@ var routes = function (Device) {
                     res.status(400);
                     res.send('name is required');
                 } else {
-                    device.save();
+                    deviceService.registerNewDevice(device);
                     res.status(201);
                     res.send(device);
                 }

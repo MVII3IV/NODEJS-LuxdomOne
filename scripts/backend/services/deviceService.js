@@ -69,6 +69,19 @@ setupDeviceCCS = function (device) {
     return device;
 }
 
+var registerNewDevice = function(device){
+    device.save(function(err){
+        if(err){
+            return 500;
+        }else{
+            webSockets.notifyFrontEnd();
+        }
+    });
+}
+
 module.exports = {
-    toggleDevice: toggleDevice
+    toggleDevice: toggleDevice,
+    turnOnDevice: turnOnDevice,
+    turnOffDevice: turnOffDevice,
+    registerNewDevice: registerNewDevice
 }

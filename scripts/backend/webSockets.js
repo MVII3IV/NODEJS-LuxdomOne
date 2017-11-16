@@ -5,11 +5,6 @@
   var Q = require('q');
 
 
-  //Models
-  //var serialPort = require('./serialPort.js');
-
-
-
   //Vars
   var devices = [];
   var types = [];
@@ -20,17 +15,12 @@
   });
 
 
-
   wss.on('connection', function connection(ws) {
 
     wSocket = ws;
     //once the devices are found we are able to send a ws message with that information to de FE
-    Q.all([deviceModel.find({}).exec(), typeModel.find({}).exec()]).then(function (data) {
-      devices = data[0];
-      types = data[1];
-      notifyFrontEnd(ws);
-    });
-
+    
+    notifyFrontEnd();
 
     ws.on('message', function incoming(message) {
       onNewMessageReceived(message);
@@ -40,9 +30,16 @@
 
 
   //send devices via WS to the FE when a new connection is detected
-  var notifyFrontEnd = function (ws) {
-    sendMessage(WebSocketsMessageType.DEVICE_DATA, devices);
-    sendMessage(WebSocketsMessageType.TYPE_DATA, types);
+  var notifyFrontEnd = function () {
+
+    Q.all([deviceModel.find({}).exec(), typeModel.find({}).exec()]).then(function (data) {
+      devices = data[0];
+      types = data[1];
+
+      sendMessage(WebSocketsMessageType.DEVICE_DATA, devices);
+      sendMessage(WebSocketsMessageType.TYPE_DATA, types);
+
+    });
   };
 
 
@@ -109,6 +106,8 @@
       }
     });
   };
+
+
 
   module.exports = {
     notifyFrontEnd: notifyFrontEnd,
