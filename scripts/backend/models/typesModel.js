@@ -14,3 +14,13 @@ var typesModel = new Schema({
 });
 
 module.exports = mongoose.model('types', typesModel);
+
+
+
+/*
+{
+    "id" : 2,
+    "name" : "pulse",
+    "description" : "none"
+}
+*/

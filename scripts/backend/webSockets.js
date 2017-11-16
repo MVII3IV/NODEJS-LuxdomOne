@@ -26,24 +26,18 @@ module.exports = function (Devices, Types) {
 
     wSocket = ws;
     //once the devices are found we are able to send a ws message with that information to de FE
-    Devices.find({}, function(err, devices){
+    Devices.find({}, function (err, devices) {
       console.log(devices);
     });
-    
-    
 
-    Q.all([ Devices.find({}).exec() ]).then(function (data) {
-      var devices = data[0];
+
+
+    Q.all([Devices.find({}).exec(), Types.find({}).exec()]).then(function (data) {
+      devices = data[0];
+      types = data[1];
+      onNewConnection(ws);
     });
-    /*
-    deviceModel.Device.findAll().then(d => {
-      typeModel.findAll().then(t => {
-        types = t;
-        devices = d;
-        onNewConnection(ws);
-      });
-    });
-*/
+
 
     ws.on('message', function incoming(message) {
       onNewMessageReceived(message);
@@ -125,79 +119,77 @@ module.exports = function (Devices, Types) {
     }
   };
 
-/*
-  //Front End Updater : using as parameter devices
-  var updateFrontEndByDevices = function (devices) {
-    sendMessageAllClients(WebSocketsMessageType.DEVICE_DATA, devices);
-  };
-
-  //Front End Updater : without devices
-  var updateFrontEndDevices = function () {
-    deviceModel.findAll().then(function (devices) {
+  
+    //Front End Updater : using as parameter devices
+    var updateFrontEndByDevices = function (devices) {
       sendMessageAllClients(WebSocketsMessageType.DEVICE_DATA, devices);
-    });
-  };
+    };
 
-
-  var updateFrontEndRoutines = function () {
-
-    daysModel.findAll().then(function (days) {
-      var daysRoutine = days;
-      routineModel.findAll().then(function (routines) {
-
-        for (var i = 0; i < routines.length; i++) {
-          var days = daysRoutine.filter(function (day) {
-            return day.routine_id == routines[i].id;
-          });
-
-          routines[i].days = [];
-          routines[i].days = days;
-        }
-
-        sendMessageAllClients(WebSocketsMessageType.ROUTINES_DATA, routines);
+    //Front End Updater : without devices
+    var updateFrontEndDevices = function () {
+      deviceModel.findAll().then(function (devices) {
+        sendMessageAllClients(WebSocketsMessageType.DEVICE_DATA, devices);
       });
-    });
-
-  };
-
-  var sendMessage = function (msgType, payload) {
-    wSocket.send(JSON.stringify({
-      type: msgType,
-      payload: payload
-    }));
-  };
+    };
 
 
-  var sendMessageAllClients = function (msgType, payload) {
-    wss.clients.forEach(function each(client) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({
-          type: msgType,
-          payload: payload
-        }));
-      }
-    });
-  };
+    var updateFrontEndRoutines = function () {
+
+      daysModel.findAll().then(function (days) {
+        var daysRoutine = days;
+        routineModel.findAll().then(function (routines) {
+
+          for (var i = 0; i < routines.length; i++) {
+            var days = daysRoutine.filter(function (day) {
+              return day.routine_id == routines[i].id;
+            });
+
+            routines[i].days = [];
+            routines[i].days = days;
+          }
+
+          sendMessageAllClients(WebSocketsMessageType.ROUTINES_DATA, routines);
+        });
+      });
+
+    };
+
+    var sendMessage = function (msgType, payload) {
+      wSocket.send(JSON.stringify({
+        type: msgType,
+        payload: payload
+      }));
+    };
+
+
+    var sendMessageAllClients = function (msgType, payload) {
+      wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({
+            type: msgType,
+            payload: payload
+          }));
+        }
+      });
+    };
 
 
 
-  //Controllers
-  var deviceController = require('./controllers/deviceController.js');
-  var routineModel = require('./models/routine.js');
-  var deviceModel = require('./models/device.js');
-  var daysModel = require('./models/daysRoutine.js');
-*/
+    //Controllers
+    var deviceController = require('./controllers/deviceController.js');
+    var routineModel = require('./models/routine.js');
+    var deviceModel = require('./models/device.js');
+    var daysModel = require('./models/daysRoutine.js');
 
-  return self;
 };
 
 //module.exports = {
-  //sendMessage: sendMessage,
-  //wss: wss,
-  //WebSocket: WebSocket,
-  //webSocket: websocket
-  //updateFrontEndDevices: updateFrontEndDevices,
-  //updateFrontEndByDevices: updateFrontEndByDevices,
-  //sendMessageAllClients: sendMessageAllClients,
-  //updateFrontEndRoutines: updateFrontEndRoutines
+//sendMessage: sendMessage,
+//wss: wss,
+//WebSocket: WebSocket,
+//webSocket: websocket
+//updateFrontEndDevices: updateFrontEndDevices,
+//updateFrontEndByDevices: updateFrontEndByDevices,
+//sendMessageAllClients: sendMessageAllClients,
+//updateFrontEndRoutines: updateFrontEndRoutines
 //}
