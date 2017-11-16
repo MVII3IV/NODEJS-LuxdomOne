@@ -3,8 +3,8 @@ var express = require('express');
 var mongoose = require('mongoose');
 
 //models
-var Devices = require('./scripts/backend/models/deviceModel');
-var Types = require('./scripts/backend/models/typesModel');
+var DeviceModel = require('./scripts/backend/models/deviceModel');
+var TypeModel = require('./scripts/backend/models/typesModel');
 
 
 
@@ -51,15 +51,15 @@ db.on('open', function () {
 
 
 
-var webSockets = require('./scripts/backend/webSockets')(Devices, Types);
+var webSockets = require('./scripts/backend/webSockets');
 //var serialPort = require('./scripts/backend/serialPort.js');
 //var scheduler = require('./scripts/backend/scheduler.js');
 
 
 
 //Routes
-var deviceRouter = require('./scripts/backend/routes/deviceRoutes')(Devices);
-var typesRouter = require('./scripts/backend/routes/typeRouter')(Types);
+var deviceRouter = require('./scripts/backend/routes/deviceRoutes')(DeviceModel);
+var typesRouter = require('./scripts/backend/routes/typeRouter')(TypeModel);
 
 app.use('/api/devices', deviceRouter);
 app.use('/api/types', typesRouter);

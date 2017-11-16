@@ -45,7 +45,13 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
 
 
         $scope.toggle = function (device) {
-            wsClient.sendMessage(wsClient.WebSocketsMessageType.ORDER_INSTRUCTION, device);
+            //wsClient.sendMessage(wsClient.WebSocketsMessageType.ORDER_INSTRUCTION, device);
+            $http.post('/api/devices/toggle', device)
+                .then(function (res) {
+                    console.log(res);
+                }).catch(function (err) {
+                    console.log(err);
+                });
         };
 
         $scope.registerNewDevice = function (device) {

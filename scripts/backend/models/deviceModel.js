@@ -2,9 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var devicesModel = new Schema({
-  id: {
-    type: Number
-  },
   name: {
     type: String
   },

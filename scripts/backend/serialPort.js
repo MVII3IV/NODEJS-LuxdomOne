@@ -49,7 +49,7 @@ var writeSerial = function (message) {
 
 var sendMessageByDevice = function(device){
     writeSerial({
-    "id": device.xbee_id, //deviceId
+    "id": device.xbeeId, //deviceId
     "rel": device.relay, //relay
     "ins": device.state, //instruction
     "typ": device.type

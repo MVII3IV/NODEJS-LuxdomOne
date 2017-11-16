@@ -1,8 +1,16 @@
 var express = require('express');
+var deviceService = require('../services/deviceService');
 
 var routes = function (Device) {
 
     var deviceRouter = express.Router();
+
+    deviceRouter.route('/toggle')
+        .post(function (req, res) {
+            var device = req.body;
+            deviceService.toggleDevice(device);
+            res.sendStatus(200);
+        });
 
     deviceRouter.route('/')
         .get(
