@@ -51,23 +51,34 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
 
 
         $scope.toggle = function (device) {
-            //wsClient.sendMessage(wsClient.WebSocketsMessageType.ORDER_INSTRUCTION, device);
             postData('/api/devices/toggle', device);
         };
 
         $scope.registerNewDevice = function (device) {
-            //wsClient.sendMessage(wsClient.WebSocketsMessageType.SAVE_DEVICE, device);
             device.relay -= 1;
             device.type = device.type.id;
             postData('/api/devices/', device);
         };
 
         $scope.removeDeviceFromDB = function (device) {
-            wsClient.sendMessage(wsClient.WebSocketsMessageType.REMOVE_DEVICE, device);
+            $http.delete('/api/devices/' + device._id)
+                .then(
+                    function (res) {
+                        console.log(res);
+                    },
+                    function (err) {
+                        console.log(err);
+                    });
         };
 
         $scope.updateDeviceFromDB = function (device) {
-            wsClient.sendMessage(wsClient.WebSocketsMessageType.UPDATE_DEVICE, device);
+            //wsClient.sendMessage(wsClient.WebSocketsMessageType.UPDATE_DEVICE, device);
+            $http.patch('/api/devices/'+ device._id, device)
+            .then(function (res) {
+                console.log(res);
+            }).catch(function (err) {
+                console.log(err);
+            });
         };
 
         function postData(URL, data) {
@@ -78,5 +89,7 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
                     console.log(err);
                 });
         }
+
+
     }
 ]);

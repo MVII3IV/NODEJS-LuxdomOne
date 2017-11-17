@@ -1,117 +1,116 @@
-  var WebSocketsMessageType = require('./enums/WebSocketsMessageTypes');
-  var deviceModel = require('./models/deviceModel');
-  var typeModel = require('./models/typesModel');
-  var WebSocket = require('ws');
-  var Q = require('q');
+const WebSocket = require('ws');
+var WebSocketsMessageType = require('./enums/WebSocketsMessageTypes');
+var deviceModel = require('./models/deviceModel');
+var typeModel = require('./models/typesModel');
+var Q = require('q');
 
 
-  //Vars
-  var devices = [];
-  var types = [];
+//Vars
+var devices = [];
+var types = [];
+var wSocket = null;
+const wss = new WebSocket.Server({
+  port: 8080
+});
 
-  var wSocket = null;
-  var wss = new WebSocket.Server({
-    port: 8080
+
+wss.on('connection', function connection(ws) {
+
+  wSocket = ws;
+  //once the devices are found we are able to send a ws message with that information to de FE
+
+  notifyFrontEnd();
+
+  ws.on('message', function incoming(message) {
+    onNewMessageReceived(message);
   });
 
+});
 
-  wss.on('connection', function connection(ws) {
 
-    wSocket = ws;
-    //once the devices are found we are able to send a ws message with that information to de FE
-    
-    notifyFrontEnd();
+//send devices via WS to the FE when a new connection is detected
+var notifyFrontEnd = function () {
 
-    ws.on('message', function incoming(message) {
-      onNewMessageReceived(message);
-    });
+  Q.all([deviceModel.find({}).exec(), typeModel.find({}).exec()]).then(function (data) {
+    devices = data[0];
+    types = data[1];
+
+    updateFrontEndByDevices(devices);
+    sendMessage(WebSocketsMessageType.TYPE_DATA, types);
 
   });
+};
 
 
-  //send devices via WS to the FE when a new connection is detected
-  var notifyFrontEnd = function () {
+var onNewMessageReceived = function (message) {
 
-    Q.all([deviceModel.find({}).exec(), typeModel.find({}).exec()]).then(function (data) {
-      devices = data[0];
-      types = data[1];
+  var data = JSON.parse(message);
 
-      sendMessage(WebSocketsMessageType.DEVICE_DATA, devices);
-      sendMessage(WebSocketsMessageType.TYPE_DATA, types);
+  switch (data.type) {
 
-    });
+    case WebSocketsMessageType.UPDATE_DEVICE:
+      deviceModel.update(data.payload);
+      updateFrontEndDevices();
+      break;
+
   };
+}
 
 
-  var onNewMessageReceived = function (message) {
+var updateFrontEndByDevices = function (devices) {
+  sendMessageAllClients(WebSocketsMessageType.DEVICE_DATA, devices);
+};
 
-    var data = JSON.parse(message);
-
-    switch (data.type) {
-
-      case WebSocketsMessageType.UPDATE_DEVICE:
-        deviceModel.update(data.payload);
-        updateFrontEndDevices();
-        break;
-
-    };
-  }
-
-
-  var updateFrontEndByDevices = function (devices) {
+var updateFrontEndDevices = function () {
+  deviceModel.findAll().then(function (devices) {
     sendMessageAllClients(WebSocketsMessageType.DEVICE_DATA, devices);
-  };
+  });
+};
 
-  var updateFrontEndDevices = function () {
-    deviceModel.findAll().then(function (devices) {
-      sendMessageAllClients(WebSocketsMessageType.DEVICE_DATA, devices);
-    });
-  };
+var updateFrontEndRoutines = function () {
 
-  var updateFrontEndRoutines = function () {
+  daysModel.findAll().then(function (days) {
+    var daysRoutine = days;
+    routineModel.findAll().then(function (routines) {
 
-    daysModel.findAll().then(function (days) {
-      var daysRoutine = days;
-      routineModel.findAll().then(function (routines) {
+      for (var i = 0; i < routines.length; i++) {
+        var days = daysRoutine.filter(function (day) {
+          return day.routine_id == routines[i].id;
+        });
 
-        for (var i = 0; i < routines.length; i++) {
-          var days = daysRoutine.filter(function (day) {
-            return day.routine_id == routines[i].id;
-          });
-
-          routines[i].days = [];
-          routines[i].days = days;
-        }
-
-        sendMessageAllClients(WebSocketsMessageType.ROUTINES_DATA, routines);
-      });
-    });
-
-  };
-
-  var sendMessage = function (msgType, payload) {
-    wSocket.send(JSON.stringify({
-      type: msgType,
-      payload: payload
-    }));
-  };
-
-  var sendMessageAllClients = function (msgType, payload) {
-    wss.clients.forEach(function each(client) {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify({
-          type: msgType,
-          payload: payload
-        }));
+        routines[i].days = [];
+        routines[i].days = days;
       }
+
+      sendMessageAllClients(WebSocketsMessageType.ROUTINES_DATA, routines);
     });
-  };
+  });
+
+};
+
+var sendMessage = function (msgType, payload) {
+  wSocket.send(JSON.stringify({
+    type: msgType,
+    payload: payload
+  }));
+};
+
+var sendMessageAllClients = function (msgType, payload) {
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({
+        type: msgType,
+        payload: payload
+      }));
+    }
+  });
+};
 
 
 
-  module.exports = {
-    notifyFrontEnd: notifyFrontEnd,
-    sendMessage: sendMessage,
-    sendMessageAllClients: sendMessageAllClients,
-    updateFrontEndByDevices: updateFrontEndByDevices
-  }
+module.exports = {
+  notifyFrontEnd: notifyFrontEnd,
+  sendMessage: sendMessage,
+  sendMessageAllClients: sendMessageAllClients,
+  updateFrontEndByDevices: updateFrontEndByDevices
+}
