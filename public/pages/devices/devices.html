@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-3" ng-repeat="device in devices track by $index">
+    <div class="col-md-3 col-xs-6" ng-repeat="device in devices track by $index" ng-if="device.type == 1">
 
         <!-- panel-featured-primary -->
         <section class="panel panel-featured-left panel-featured-{{device.class}}" ng-click="toggle(device)">

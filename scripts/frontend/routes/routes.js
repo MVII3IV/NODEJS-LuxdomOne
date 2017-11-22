@@ -15,7 +15,7 @@ angular.module("app").config(
 
         .when('/access', {
             templateUrl: 'pages/access/access.html',
-            controller: 'deviceController'
+            controller: 'accessController'
         })
 
         .when('/cp/devices', {

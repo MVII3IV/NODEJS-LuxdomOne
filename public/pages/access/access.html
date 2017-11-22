@@ -1,1 +1,31 @@
-hello
+<div class="row">
+    <div class="col-md-3 col-xs-6" ng-repeat="device in devices track by $index" ng-if="device.type == 2">
+
+        <!-- panel-featured-primary -->
+        <section class="panel panel-featured-left panel-featured-{{device.class}}" ng-click="activate(device)">
+            <div class="panel-body">
+                <div class="widget-summary">
+                    <div class="widget-summary-col widget-summary-col-icon">
+                        <!-- bg-primary -->
+                        <div class="summary-icon bg-{{device.class}}">
+                            <i class="fa fa-lightbulb-o"></i>
+                        </div>
+                    </div>
+                    <div class="widget-summary-col">
+                        <div class="summary">
+
+                            <h4 class="title">{{device.name}}</h4>
+                            <div class="info">
+                                <strong class="amount">{{device.action}}</strong>
+                            </div>
+
+                        </div>
+                        <div class="summary-footer">
+                            <a class="text-muted text-uppercase">(view all)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

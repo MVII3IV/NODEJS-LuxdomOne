@@ -56,6 +56,8 @@ var webSockets = require('./scripts/backend/webSockets');
 //Routes
 var deviceRouter = require('./scripts/backend/routes/deviceRoutes')(DeviceModel);
 var typesRouter = require('./scripts/backend/routes/typeRouter')(TypeModel);
+var accessRouter = require('./scripts/backend/routes/accessRouter')(TypeModel);
 
 app.use('/api/devices', deviceRouter);
 app.use('/api/types', typesRouter);
+app.use('/api/access', accessRouter);

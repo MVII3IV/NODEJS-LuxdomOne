@@ -62,7 +62,7 @@ var updateFrontEndByDevices = function (devices) {
 };
 
 var updateFrontEndDevices = function () {
-  deviceModel.findAll().then(function (devices) {
+  deviceModel.find({}, function (err, devices) {
     sendMessageAllClients(WebSocketsMessageType.DEVICE_DATA, devices);
   });
 };
@@ -112,5 +112,6 @@ module.exports = {
   notifyFrontEnd: notifyFrontEnd,
   sendMessage: sendMessage,
   sendMessageAllClients: sendMessageAllClients,
-  updateFrontEndByDevices: updateFrontEndByDevices
+  updateFrontEndByDevices: updateFrontEndByDevices,
+  updateFrontEndDevices: updateFrontEndDevices
 }

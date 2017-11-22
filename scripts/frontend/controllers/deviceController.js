@@ -16,12 +16,14 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
                 console.log(err);
             });
 
+
         $http.get('/api/devices')
             .then(function (response) {
                 $scope.devices = response.data;
             }).catch(function (err) {
                 console.log(err);
             });
+
 
 
         wsClient.ws.onmessage = function (msg) {
@@ -73,12 +75,12 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
 
         $scope.updateDeviceFromDB = function (device) {
             //wsClient.sendMessage(wsClient.WebSocketsMessageType.UPDATE_DEVICE, device);
-            $http.patch('/api/devices/'+ device._id, device)
-            .then(function (res) {
-                console.log(res);
-            }).catch(function (err) {
-                console.log(err);
-            });
+            $http.patch('/api/devices/' + device._id, device)
+                .then(function (res) {
+                    console.log(res);
+                }).catch(function (err) {
+                    console.log(err);
+                });
         };
 
         function postData(URL, data) {
