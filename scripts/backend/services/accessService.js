@@ -1,5 +1,7 @@
 var webSockets = require('../webSockets');
 var serialPort = require('../serialPort');
+var deviceModel = require('../models/deviceModel');
+var deviceService = require('../services/deviceService');
 
 var accessWanted;
 
@@ -7,35 +9,48 @@ var activate = function (req, res) {
 
     var device = req.body;
 
-    if (!accessWanted || accessWanted._id != device._id) {
-        accessWanted = device;
-        device.state = true;
-        device = changeDeviceCSS(device);
-        webSockets.updateFrontEndDevices();
-        return res.send('one more click');
-    }
+    deviceModel.find({}, function (err, devices) {
+        if (err) {
+            res.send(err);
+        } else {
 
-    serialPort.sendMessageByDevice(device);
+            if (!accessWanted || accessWanted._id != device._id) {
+                accessWanted = device;
+                device.state = true;
+                device = changeDeviceCSS(device);
+                devices = deviceService.updateDevicesFromDevice(devices, device);
+                webSockets.updateFrontEndByDevices(devices);
+                return res.send('Confirm action');
+            }
 
-    accessWanted = null;
-    return res.send('ok');
+            if (accessWanted) {
+                device.state = false;
+                changeDeviceCSS(device)
+                devices = deviceService.updateDevicesFromDevice(devices, device);
+                webSockets.updateFrontEndByDevices(devices);
+                serialPort.sendMessageByDevice(device);
+                accessWanted = null;
+                return res.send('ok');
+            }
+        }
+
+    });
 }
 
 var changeDeviceCSS = function (device) {
     if (device.state) {
-        //Turn On
-        //device.class = "tertiary";
+        //Confirmation
         device.class = "warning";
         device.action = "Confirmar";
     } else {
-        //Turn Off
+        //default
         device.class = "primary";
-        device.action = "Apagado";
+        device.action = "En reposo";
     }
-    
+
     return device;
 }
 
 module.exports = {
-    activate : activate
+    activate: activate
 }

@@ -117,12 +117,10 @@ var setupDeviceCCS = function (device) {
     } else {
         //Turn Off
         device.class = "primary";
-        device.action = "Apagado";
+        device.action = "En reposo";
     }
     return device;
 }
-
-
 
 //Control panel devices
 var registerDevice = function (req, res) {
@@ -155,6 +153,12 @@ var removeDevice = function (req, res) {
 }
 //End control panel devices
 
+var updateDevicesFromDevice = function(devices, device){
+    var index = devices.findIndex(obj => obj._id.toString() == device._id);
+    devices[index] = device;
+    return devices;
+}
+
 module.exports = {
     getAll: getAll,
     patch: patch,
@@ -163,5 +167,6 @@ module.exports = {
     turnOnDevice: turnOnDevice,
     turnOffDevice: turnOffDevice,
     registerDevice: registerDevice,
-    removeDevice: removeDevice
+    removeDevice: removeDevice,
+    updateDevicesFromDevice: updateDevicesFromDevice
 }

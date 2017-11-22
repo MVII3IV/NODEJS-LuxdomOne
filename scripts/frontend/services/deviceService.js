@@ -3,7 +3,7 @@ angular.module("app").service("deviceService", ['$http', function ($http) {
     this.newDevice = {
         "name": "",
         "relay": null,
-        "action": "Apagado",
+        "action": "En reposo",
         "class": "primary",
         "state": false,
         "xbeeId": "",
