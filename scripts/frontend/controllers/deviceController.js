@@ -1,5 +1,5 @@
-angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClient', 'deviceFactory', 'deviceService',
-    function ($scope, $http, wsClient, deviceFactory, deviceService) {
+angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClient', 'deviceService', 'typeService',
+    function ($scope, $http, wsClient, deviceService, typeService) {
 
         $scope.title = "Luxdom One";
         $scope.selectedDevice = null;
@@ -7,14 +7,8 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
         $scope.devices = [];
         $scope.types = [];
         $scope.newDevice = deviceService.newDevice;
-
-
-        $http.get('/api/types')
-            .then(function (response) {
-                $scope.types = response.data;
-            }).catch(function (err) {
-                console.log(err);
-            });
+        $scope.types;
+        $scope.devices;
 
 
         $http.get('/api/devices')
@@ -24,32 +18,12 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
                 console.log(err);
             });
 
-
-
-        wsClient.ws.onmessage = function (msg) {
-
-            msg = JSON.parse(msg.data);
-            switch (msg.type) {
-
-
-                //add devices
-                case wsClient.WebSocketsMessageType.DEVICE_DATA:
-                    $scope.devices = msg.payload;
-                    break;
-
-                case wsClient.WebSocketsMessageType.TYPE_DATA:
-                    $scope.types = msg.payload;
-                    break;
-
-                default:
-                    "";
-                    break;
-
-
-            }
-            $scope.$apply();
-        }
-
+        $http.get('/api/types')
+            .then(function (response) {
+                $scope.types = response.data;
+            }).catch(function (err) {
+                console.log(err);
+            });
 
 
         $scope.toggle = function (device) {
@@ -90,6 +64,19 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
                 }).catch(function (err) {
                     console.log(err);
                 });
+        }
+
+
+        wsClient.addListener(setDevices);
+        function setDevices(devices) {
+            $scope.devices = devices;
+            $scope.$apply();
+        }
+
+        wsClient.addListener(setTypes);
+        function setTypes(types) {
+            $scope.types = types;
+            $scope.$apply();
         }
 
 

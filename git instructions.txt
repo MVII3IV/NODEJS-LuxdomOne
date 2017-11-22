@@ -6,3 +6,6 @@ push canche to branch
 git add .
 git commit -am "text"
 git push origin BRANCH
+
+pull branch
+git pull origin branch

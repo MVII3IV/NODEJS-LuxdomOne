@@ -1,14 +1,13 @@
 angular.module('app').controller("accessController", ['$scope', '$http', 'wsClient', 'deviceFactory', 'deviceService', 'accessService',
     function ($scope, $http, wsClient, deviceFactory, deviceService, accessService) {
 
-
-
         $http.get('/api/devices')
             .then(function (response) {
                 $scope.devices = response.data;
             }).catch(function (err) {
                 console.log(err);
             });
+
 
         $scope.activate = function (device) {
             $http.post("/api/access/activate", device)
@@ -19,29 +18,19 @@ angular.module('app').controller("accessController", ['$scope', '$http', 'wsClie
                 });
         }
 
-        wsClient.ws.onmessage = function (msg) {
-
-            msg = JSON.parse(msg.data);
-            switch (msg.type) {
-
-
-                //add devices
-                case wsClient.WebSocketsMessageType.DEVICE_DATA:
-                    $scope.devices = msg.payload;
-                    break;
-
-                case wsClient.WebSocketsMessageType.TYPE_DATA:
-                    $scope.types = msg.payload;
-                    break;
-
-                default:
-                    "";
-                    break;
-
-
-            }
+        //this function is called every time a websocket message is received with type WebSocketsMessageType.DEVICE_DATA
+        wsClient.addListener(setDevices);
+        function setDevices(devices) {
+            $scope.devices = devices;
             $scope.$apply();
         }
+
+        wsClient.addListener(setTypes);
+        function setTypes(types) {
+            $scope.types = types;
+            $scope.$apply();
+        }
+
 
     }
 ]);

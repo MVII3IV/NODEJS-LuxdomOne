@@ -1,4 +1,4 @@
-angular.module("app").service("deviceService", function () {
+angular.module("app").service("deviceService", ['$http', function ($http) {
 
     this.newDevice = {
         "name": "",
@@ -11,4 +11,4 @@ angular.module("app").service("deviceService", function () {
         "watts": 0
     }
 
-});
+}]);

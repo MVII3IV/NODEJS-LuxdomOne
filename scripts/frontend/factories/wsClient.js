@@ -1,6 +1,7 @@
 angular.module('app').factory('wsClient', [function () {
 
     var self = this;
+    var listeners = [];
 
     self.WebSocketsMessageType = {
         ORDER_INSTRUCTION: 1,
@@ -19,7 +20,6 @@ angular.module('app').factory('wsClient', [function () {
     var ws = new WebSocket('ws://' + window.location.host + ':8080');
 
     ws.onopen = function () {
-
         console.log('Connected');
     };
 
@@ -38,6 +38,36 @@ angular.module('app').factory('wsClient', [function () {
 
     }
 
+    ws.onmessage = function (msg) {
+
+        msg = JSON.parse(msg.data);
+        switch (msg.type) {
+
+
+            //add devices
+            case self.WebSocketsMessageType.DEVICE_DATA:
+                var devices = msg.payload;
+                listeners.forEach(function(listener){
+                    listener(devices);
+                });
+                break;
+
+            case self.WebSocketsMessageType.TYPE_DATA:
+                var types = msg.payload;
+                break;
+
+            default:
+                "";
+                break;
+
+
+        }
+       // $scope.$apply();
+    }
+
+    self.addListener = function(listener){
+            listeners.push(listener);
+    }
 
     self.ws = ws;
 
