@@ -1,5 +1,5 @@
-angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClient', 'deviceService', 'typeService',
-    function ($scope, $http, wsClient, deviceService, typeService) {
+angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClient', 'deviceService',
+    function ($scope, $http, wsClient, deviceService) {
 
         $scope.title = "Luxdom One";
         $scope.selectedDevice = null;
@@ -67,17 +67,12 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
         }
 
 
-        wsClient.addListener(setDevices);
-        function setDevices(devices) {
-            $scope.devices = devices;
-            $scope.$apply();
-        }
-
-        wsClient.addListener(setTypes);
-        function setTypes(types) {
-            $scope.types = types;
-            $scope.$apply();
-        }
+        wsClient().addListener(
+            function setDevices(devices) {
+                $scope.devices = devices;
+                $scope.$apply();
+            }
+        );
 
 
     }

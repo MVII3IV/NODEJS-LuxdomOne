@@ -1,9 +1,6 @@
 var express = require('express');
 var accessService = require('../services/accessService');
 
-
-
-
 var routes = function () {
     var router = express.Router();
 

@@ -1,5 +1,6 @@
-angular.module('app').controller("accessController", ['$scope', '$http', 'wsClient', 'deviceFactory', 'deviceService', 'accessService',
-    function ($scope, $http, wsClient, deviceFactory, deviceService, accessService) {
+angular.module('app').controller("accessController", ['$scope', '$http', 'wsClient',
+    function ($scope, $http, wsClient) {
+
 
         $http.get('/api/devices')
             .then(function (response) {
@@ -19,17 +20,12 @@ angular.module('app').controller("accessController", ['$scope', '$http', 'wsClie
         }
 
         //this function is called every time a websocket message is received with type WebSocketsMessageType.DEVICE_DATA
-        wsClient.addListener(setDevices);
-        function setDevices(devices) {
-            $scope.devices = devices;
-            $scope.$apply();
-        }
-
-        wsClient.addListener(setTypes);
-        function setTypes(types) {
-            $scope.types = types;
-            $scope.$apply();
-        }
+        wsClient().addListener(
+            function setDevices(devices) {
+                $scope.devices = devices;
+                $scope.$apply();
+            }
+        );
 
 
     }

@@ -122,6 +122,7 @@ var setupDeviceCCS = function (device) {
     return device;
 }
 
+
 //Control panel devices
 var registerDevice = function (req, res) {
     var device = new deviceModel(req.body);
@@ -152,6 +153,7 @@ var removeDevice = function (req, res) {
 
 }
 //End control panel devices
+
 
 var updateDevicesFromDevice = function(devices, device){
     var index = devices.findIndex(obj => obj._id.toString() == device._id);
