@@ -48,7 +48,7 @@ db.on('open', function () {
 //  Files:
 var webSockets = require('./scripts/backend/webSockets');
 //var serialPort = require('./scripts/backend/serialPort.js');
-//var scheduler = require('./scripts/backend/scheduler.js');
+var scheduler = require('./scripts/backend/scheduler.js');
 
 
 //  Routes:

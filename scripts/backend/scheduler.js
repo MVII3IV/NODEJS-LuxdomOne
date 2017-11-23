@@ -1,12 +1,12 @@
-var Q = require('q');
+var q = require('q');
 var serialPort = require('./serialPort.js');
 var wsClient = require('./webSockets.js');
 var dateFormat = require('dateformat');
 
 //Models
-var routineModel = require('./models/routine.js');
-var deviceModel = require('./models/device.js');
-var daysModel = require('./models/daysRoutine.js');
+var routineModel = require('./models/routineModel');
+var deviceModel = require('./models/deviceModel.js');
+var daysModel = require('./models/daysModel.js');
 var deviceController = require('./controllers/deviceController.js');
 
 var minutes = 1;
@@ -15,10 +15,7 @@ var interval = minutes * 60 * 1000;
 
 setInterval(function () {
     console.log("Checking Routines");
-
-
-
-    Q.all([daysModel.findAll(), routineModel.findAll(), deviceModel.findAll()]).then(function (data) {
+    q.all([daysModel.find({}).exec(), routineModel.find({}).exec(), deviceModel.find({}).exec()]).then(function (data) {
 
         var days = data[0];
         var routines = data[1];
@@ -52,9 +49,6 @@ setInterval(function () {
 
 
 }, interval);
-
-
-
 
 
 var actionPerformer = function (device, routine) {

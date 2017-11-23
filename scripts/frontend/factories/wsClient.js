@@ -5,7 +5,7 @@ angular.module('app').factory('wsClient', [function () {
 
         var listeners = [];
 
-        if(arguments.length > 0){
+        if (arguments.length > 0) {
             for (var i = 0; i < arguments[0].length; i++) {
                 listeners.push(arguments[0][i]);
             }
@@ -37,7 +37,7 @@ angular.module('app').factory('wsClient', [function () {
         ws.onclose = function () {
             console.log('disconnected' + ws);
 
-            setTimeout(function(){
+            setTimeout(function () {
                 webSocketClient(listeners);
             }, 1000);
 
@@ -76,6 +76,10 @@ angular.module('app').factory('wsClient', [function () {
                     var types = msg.payload;
                     break;
 
+                case wsClient.WebSocketsMessageType.ROUTINES_DATA:
+                    getRoutinesData();
+                    break;
+                    
                 default:
                     "";
                     break;
