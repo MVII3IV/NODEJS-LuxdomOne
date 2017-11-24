@@ -3,10 +3,10 @@ angular.module("app").service("routineService", function ($q, $http) {
 
     this.getRoutinesData = function () {
         return $q.all([
-            $http.get('/routines'), 
-            $http.get('/days-routine'), 
-            $http.get('/types'), 
-            $http.get('/devices')]);
+            $http.get('/api/routines'), 
+            $http.get('/api/daysroutine'), 
+            $http.get('/api/types'), 
+            $http.get('/api/devices')]);
     };
 
 

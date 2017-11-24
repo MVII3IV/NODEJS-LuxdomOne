@@ -23,29 +23,11 @@ angular.module('app').controller("routineController", ['wsClient', '$scope', '$h
             $scope.devices = res[3].data;
 
             $scope.routines = routineService.agroupRoutineMembers($scope.routines, $scope.devices, $scope.daysRoutine);
+            //$scope.$apply();
         });
     }
 
     getRoutinesData();
-
-
-    wsClient.ws.onmessage = function (msg) {
-
-        msg = JSON.parse(msg.data);
-        switch (msg.type) {
-
-            //routines updates
-            case wsClient.WebSocketsMessageType.ROUTINES_DATA:
-                getRoutinesData();
-                break;
-
-            default:
-                "";
-                break;
-
-        }
-        $scope.$apply();
-    };
 
 
     //method used to push elements to the an array to then create a routine
@@ -163,8 +145,7 @@ angular.module('app').controller("routineController", ['wsClient', '$scope', '$h
         $scope.addedDeviceToRoutine = [];
     }
 
-    
-
+    wsClient().addListener('routines', getRoutinesData);
     
 
 }]);

@@ -135,7 +135,7 @@ var findAll = function () {
     return r;
   });
 };
-
+/*
 module.exports = {
   Routine: Routine,
   save: save,
@@ -144,4 +144,4 @@ module.exports = {
   deleteById: deleteById,
   deleteByGroupId: deleteByGroupId,
   getAllByGroupId: getAllByGroupId
-}
+}*/

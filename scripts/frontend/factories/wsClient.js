@@ -3,7 +3,7 @@ angular.module('app').factory('wsClient', [function () {
 
     return webSocketClient = function () {
 
-        var listeners = [];
+        var listeners = {};
 
         if (arguments.length > 0) {
             for (var i = 0; i < arguments[0].length; i++) {
@@ -67,7 +67,7 @@ angular.module('app').factory('wsClient', [function () {
                 //add devices
                 case self.WebSocketsMessageType.DEVICE_DATA:
                     var devices = msg.payload;
-                    listeners.forEach(function (listener) {
+                    listeners.devices.forEach(function (listener) {
                         listener(devices);
                     });
                     break;
@@ -77,9 +77,12 @@ angular.module('app').factory('wsClient', [function () {
                     break;
 
                 case wsClient.WebSocketsMessageType.ROUTINES_DATA:
+                    listeners.routines.forEach(function (listener) {
+                        listener(msg.payload);
+                    });
                     getRoutinesData();
                     break;
-                    
+
                 default:
                     "";
                     break;
@@ -89,8 +92,12 @@ angular.module('app').factory('wsClient', [function () {
             // $scope.$apply();
         }
 
-        self.addListener = function (listener) {
-            listeners.push(listener);
+        self.addListener = function (property, functionToExecute) {
+            if (!listeners.hasOwnProperty(property)) {
+                listeners[property] = [];
+            }
+
+            listeners[property].push(functionToExecute);
         }
 
         self.ws = ws;

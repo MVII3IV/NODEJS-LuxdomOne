@@ -68,11 +68,11 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
 
 
         wsClient().addListener(
-            function setDevices(devices) {
+            'devices', function setDevices(devices) {
                 $scope.devices = devices;
                 $scope.$apply();
-            }
-        );
+            
+        });
 
 
     }

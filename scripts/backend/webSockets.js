@@ -19,7 +19,7 @@ wss.on('connection', function connection(ws) {
   wSocket = ws;
   //once the devices are found we are able to send a ws message with that information to de FE
 
-  notifyFrontEnd();
+  //notifyFrontEnd();
 
   ws.on('message', function incoming(message) {
     onNewMessageReceived(message);

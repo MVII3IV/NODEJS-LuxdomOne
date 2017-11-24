@@ -21,11 +21,11 @@ angular.module('app').controller("accessController", ['$scope', '$http', 'wsClie
 
         //this function is called every time a websocket message is received with type WebSocketsMessageType.DEVICE_DATA
         wsClient().addListener(
-            function setDevices(devices) {
+            'devices', function setDevices(devices) {
                 $scope.devices = devices;
                 $scope.$apply();
-            }
-        );
+            
+        });
 
 
     }
