@@ -2,6 +2,7 @@ const WebSocket = require('ws');
 var WebSocketsMessageType = require('./enums/WebSocketsMessageTypes');
 var deviceModel = require('./models/deviceModel');
 var typeModel = require('./models/typesModel');
+var routinesModel = require('./models/routineModel');
 var Q = require('q');
 
 
@@ -69,21 +70,8 @@ var updateFrontEndDevices = function () {
 
 var updateFrontEndRoutines = function () {
 
-  daysModel.findAll().then(function (days) {
-    var daysRoutine = days;
-    routineModel.findAll().then(function (routines) {
-
-      for (var i = 0; i < routines.length; i++) {
-        var days = daysRoutine.filter(function (day) {
-          return day.routine_id == routines[i].id;
-        });
-
-        routines[i].days = [];
-        routines[i].days = days;
-      }
-
-      sendMessageAllClients(WebSocketsMessageType.ROUTINES_DATA, routines);
-    });
+  routinesModel.find({}, function(err, routines){
+    sendMessageAllClients(WebSocketsMessageType.ROUTINES_DATA, routines);
   });
 
 };
@@ -113,5 +101,6 @@ module.exports = {
   sendMessage: sendMessage,
   sendMessageAllClients: sendMessageAllClients,
   updateFrontEndByDevices: updateFrontEndByDevices,
-  updateFrontEndDevices: updateFrontEndDevices
+  updateFrontEndDevices: updateFrontEndDevices,
+  updateFrontEndRoutines: updateFrontEndRoutines
 }

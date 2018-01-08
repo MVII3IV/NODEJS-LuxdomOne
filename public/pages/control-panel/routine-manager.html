@@ -28,7 +28,7 @@
                             <button style="margin:7px" class="btn btn-default" ng-repeat="device in routine.devices">{{device.name}}</button>
                         </td>
                         <th>
-                            <button ng-class="day.class" ng-repeat="day in routine.days" style="margin:7px;width:40px" ng-click="setDay(day)">{{day.day}}</button>
+                            <button ng-class="day.class" ng-repeat="day in routine.days" style="margin:7px;width:40px" ng-click="setDay(routine, day.index)">{{day.day}}</button>
                         </th>
                         <td editable-text="routine.timeOn" onaftersave="updateRoutineFromDB(routine)">{{routine.timeOn}}</td>
                         <td editable-text="routine.timeOff" onaftersave="updateRoutineFromDB(routine)">{{routine.timeOff}}</td>

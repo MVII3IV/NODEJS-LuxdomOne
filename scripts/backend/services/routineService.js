@@ -1,4 +1,5 @@
 var routineModel = require('../models/routineModel');
+var webSockets = require('../webSockets');
 
 var get = function (req, res) {
     routineModel.find({}, function (err, routines) {
@@ -11,103 +12,54 @@ var get = function (req, res) {
 }
 
 var post = function (req, res) {
-    var routine = new deviceModel(req.body);
+    var routine = new routineModel(req.body);
 
-    if (!routine.index || !routine.day) {
+    if (!routine.days || !routine.devices || !routine.timeOn || !routine.timeOff) {
         res.status(400).send('routine is incomplete');
     } else {
-
-
-
-
-
-
-
-
-
-        
-
-
-        Routine.findAll().then(function (r) {
-            
-                var randomId = null;
-                var routinesFound = [];
-                var oneTimeVar = false;
-            
-                do {
-                  randomId = Math.floor((Math.random() * 9999) + 1);
-                  routinesFound = r.filter(function (r) {
-                    return r.group_id == randomId;
-                  });
-                } while (routinesFound.length != 0);
-            
-            
-            
-                var days = routines[3];
-                var devicesAdded = [];
-                //devices
-                routines[0].forEach(function (element) {
-                  devicesAdded.push(element.id);
-                });
-            
-            
-                Routine.create({
-                  devices: JSON.stringify(devicesAdded),
-                  time_on: routines[1],
-                  time_off: routines[2],
-                  group_id: randomId
-                }).then(function () {
-            
-                  for (var i = 0; i < days.length; i++) {
-            
-                    var myDay = {
-                      index: days[i].index,
-                      day: days[i].day,
-                      active: days[i].active,
-                      class: days[i].class,
-                      group_id: randomId
-                    }
-            
-                    DaysRoutine.save(myDay);
-            
-                  };
-            
-                  webSockets.updateFrontEndRoutines();
-                });
-            
-            
-            
-              });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         routine.save(function (err) {
             if (err) {
                 return 500;
             } else {
-                //webSockets.notifyFrontEnd();
+                webSockets.updateFrontEndRoutines();
                 res.status(201).send(routine);
             }
         });
     }
 }
 
+var patch = function (req, res) {
+    if (req.body._id)
+        delete req.body._id;
+
+    for (var p in req.body) {
+        req.routine[p] = req.body[p];
+    }
+
+    req.routine.save(function (err) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            webSockets.updateFrontEndRoutines();
+            res.json(req.routine);
+        }
+    });
+}
+
+var remove = function (req, res) {
+    req.routine.remove(function (err) {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            webSockets.updateFrontEndRoutines();
+            res.status(204).send("Device has been removed");
+        }
+    });
+}
+
 module.exports = {
     get: get,
-    post: post
+    post: post,
+    remove: remove,
+    patch: patch
 }

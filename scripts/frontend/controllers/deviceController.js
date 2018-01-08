@@ -48,7 +48,6 @@ angular.module('app').controller("deviceController", ['$scope', '$http', 'wsClie
         };
 
         $scope.updateDeviceFromDB = function (device) {
-            //wsClient.sendMessage(wsClient.WebSocketsMessageType.UPDATE_DEVICE, device);
             $http.patch('/api/devices/' + device._id, device)
                 .then(function (res) {
                     console.log(res);

@@ -2,36 +2,17 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var devicesModel = new Schema({
-  name: {
-    type: String
-  },
-  relay: {
-    type: Number
-  },
-  action: {
-    type: String
-  },
-  class: {
-    type: String
-  },
-  state: {
-    type: Boolean
-  },
-  xbeeId: {
-    type: String
-  },
-  type: {
-    type: Number
-  },
-  watts: {
-    type: Number
-  }
+  name: String,
+  relay: Number,
+  action: String,
+  class: String,
+  state: Boolean,
+  xbeeId: String,
+  type: Number,
+  watts: Number
 });
 
 module.exports = mongoose.model('devices', devicesModel);
-
-
-
 
 
 /*

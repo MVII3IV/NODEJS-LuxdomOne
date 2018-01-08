@@ -4,7 +4,7 @@ var webSockets = require('../webSockets');
 var serialPort = require('../serialPort');
 
 
-var getAll = function (req, res) {
+var get = function (req, res) {
     var query = {};
     query = req.query;
 
@@ -16,6 +16,25 @@ var getAll = function (req, res) {
         }
     });
 }
+
+
+var post = function (req, res) {
+    var device = new deviceModel(req.body);
+
+    if (!device.name || !device.relay || !device.xbeeId) {
+        res.status(400).send('name is required');
+    } else {
+        device.save(function (err) {
+            if (err) {
+                return 500;
+            } else {
+                webSockets.notifyFrontEnd();
+                res.status(201).send(device);
+            }
+        });
+    }
+}
+
 
 var patch = function (req, res) {
     if (req.body._id)
@@ -33,6 +52,7 @@ var patch = function (req, res) {
         }
     });
 }
+
 
 var put = function (req, res) {
 
@@ -53,6 +73,7 @@ var put = function (req, res) {
         }
     });
 }
+
 
 var toggleDevice = function (req, result) {
     var device = req.body;
@@ -82,6 +103,7 @@ var toggleDevice = function (req, result) {
     });
 }
 
+
 var turnOnDevice = function (device) {
 
     device.state = true;
@@ -94,6 +116,7 @@ var turnOnDevice = function (device) {
 
     serialPort.sendMessageByDevice(device);
 }
+
 
 var turnOffDevice = function (device) {
     console.log("turning off " + device.name);
@@ -109,6 +132,7 @@ var turnOffDevice = function (device) {
     serialPort.sendMessageByDevice(device);
 }
 
+
 var setupDeviceCCS = function (device) {
     if (device.state) {
         //Turn On
@@ -122,24 +146,6 @@ var setupDeviceCCS = function (device) {
     return device;
 }
 
-
-//Control panel devices
-var registerDevice = function (req, res) {
-    var device = new deviceModel(req.body);
-
-    if (!device.name || !device.relay || !device.xbeeId) {
-        res.status(400).send('name is required');
-    } else {
-        device.save(function (err) {
-            if (err) {
-                return 500;
-            } else {
-                webSockets.notifyFrontEnd();
-                res.status(201).send(device);
-            }
-        });
-    }
-}
 
 var removeDevice = function (req, res) {
     req.device.remove(function (err) {
@@ -162,13 +168,13 @@ var updateDevicesFromDevice = function(devices, device){
 }
 
 module.exports = {
-    getAll: getAll,
+    get: get,
+    post: post,
     patch: patch,
     put: put,
     toggleDevice: toggleDevice,
     turnOnDevice: turnOnDevice,
     turnOffDevice: turnOffDevice,
-    registerDevice: registerDevice,
     removeDevice: removeDevice,
     updateDevicesFromDevice: updateDevicesFromDevice
 }

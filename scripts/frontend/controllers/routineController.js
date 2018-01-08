@@ -1,6 +1,7 @@
 angular.module('app').controller("routineController", ['wsClient', '$scope', '$http', '$q', "routineService", "daysService", function (wsClient, $scope, $http, $q, routineService, daysService) {
 
     //routine vars
+    var endPoint = "/api/routines/";
     $scope.timeOn = "12:00 PM";
     $scope.timeOff = "12:00 PM";
     $scope.test = routineService.test;
@@ -8,21 +9,21 @@ angular.module('app').controller("routineController", ['wsClient', '$scope', '$h
     $scope.addedDeviceToRoutine = [];
     $scope.devices = [];
     $scope.routines = [];
-    $scope.routines.days = [];
-    $scope.daysRoutine = [];
+    //$scope.routines.days = [];
+    //$scope.daysRoutine = [];
     $scope.types = [];
 
 
 
-    var getRoutinesData = function(){
+    var getRoutinesData = function () {
 
         routineService.getRoutinesData().then(function (res) {
             $scope.routines = res[0].data;
-            $scope.daysRoutine = res[1].data;
-            $scope.types = res[2].data;
-            $scope.devices = res[3].data;
+            //$scope.daysRoutine = res[1].data;
+            $scope.types = res[1].data;
+            $scope.devices = res[2].data;
 
-            $scope.routines = routineService.agroupRoutineMembers($scope.routines, $scope.devices, $scope.daysRoutine);
+            //$scope.routines = routineService.agroupRoutineMembers($scope.routines/*, $scope.devices, $scope.daysRoutine*/);
             //$scope.$apply();
         });
     }
@@ -50,23 +51,52 @@ angular.module('app').controller("routineController", ['wsClient', '$scope', '$h
     };
 
     $scope.registerNewRoutine = function () {
-        wsClient.sendMessage(wsClient.WebSocketsMessageType.SAVE_ROUTINE, [$scope.addedDeviceToRoutine, $scope.timeOn, $scope.timeOff, $scope.days]);
-        restartRoutineDefaultValues();
+        $http.post(endPoint, {
+            devices: $scope.addedDeviceToRoutine,
+            groupId: null, //can be removed after test functionability
+            timeOn: $scope.timeOn,
+            timeOff: $scope.timeOff,
+            days: $scope.days
+        }).then(function (res) {
+            console.log(res);
+            restartRoutineDefaultValues();
+        }).catch(function (err) {
+            console.log(err);
+        });
     };
 
     $scope.updateRoutineFromDB = function (routine) {
-        wsClient.sendMessage(wsClient.WebSocketsMessageType.UPDATE_ROUTINE, routine);
+        //wsClient.sendMessage(wsClient.WebSocketsMessageType.UPDATE_ROUTINE, routine);
+        $http.patch(endPoint + routine._id, routine)
+            .then(function (res) {
+                console.log(res);
+            }).catch(function (err) {
+                console.log(err);
+            });
     }
 
     $scope.removeRoutineFromDB = function (routine) {
-        wsClient.sendMessage(wsClient.WebSocketsMessageType.REMOVE_ROUTINE, routine);
+        //wsClient.sendMessage(wsClient.WebSocketsMessageType.REMOVE_ROUTINE, routine);
+        $http.delete(endPoint + routine._id)
+            .then(
+                function (res) {
+                    console.log(res);
+                },
+                function (err) {
+                    console.log(err);
+                });
     };
 
+    /*
     $scope.updateDaysToDB = function (days) {
         wsClient.sendMessage(wsClient.WebSocketsMessageType.UPDATE_DAYS, days);
     }
+    */
 
-    $scope.setDay = function (day) {
+    $scope.setDay = function (routine, index) {
+
+        var day = routine.days[index];
+
         if (!day.active) {
             day.class = "btn btn-info";
             day.active = true;
@@ -75,7 +105,8 @@ angular.module('app').controller("routineController", ['wsClient', '$scope', '$h
             day.active = false;
         }
 
-        $scope.updateDaysToDB(day);
+        $scope.updateRoutineFromDB(routine);
+        //$scope.updateDaysToDB(day);
     }
 
     $scope.setDayOnModel = function (day) {
@@ -146,6 +177,7 @@ angular.module('app').controller("routineController", ['wsClient', '$scope', '$h
     }
 
     wsClient().addListener('routines', getRoutinesData);
-    
+
+
 
 }]);

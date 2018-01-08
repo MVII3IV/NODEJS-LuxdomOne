@@ -76,11 +76,11 @@ angular.module('app').factory('wsClient', [function () {
                     var types = msg.payload;
                     break;
 
-                case wsClient.WebSocketsMessageType.ROUTINES_DATA:
+                case self.WebSocketsMessageType.ROUTINES_DATA:
                     listeners.routines.forEach(function (listener) {
                         listener(msg.payload);
                     });
-                    getRoutinesData();
+                    //getRoutinesData();
                     break;
 
                 default:

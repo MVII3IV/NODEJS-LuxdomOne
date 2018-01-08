@@ -2,13 +2,11 @@ var express = require('express');
 var deviceService = require('../services/deviceService');
 
 var routes = function (Device) {
-
     var deviceRouter = express.Router();
 
-
     deviceRouter.route('/')
-        .get(deviceService.getAll)
-        .post(deviceService.registerDevice);
+        .get(deviceService.get)
+        .post(deviceService.post);
 
     deviceRouter.route('/toggle')
         .post(deviceService.toggleDevice);

@@ -3,13 +3,13 @@ angular.module("app").service("routineService", function ($q, $http) {
 
     this.getRoutinesData = function () {
         return $q.all([
-            $http.get('/api/routines'), 
-            $http.get('/api/daysroutine'), 
+            $http.get('/api/routines'),
+            //$http.get('/api/daysroutine'), 
             $http.get('/api/types'), 
             $http.get('/api/devices')]);
     };
 
-
+/*
      this.agroupRoutineMembers = function (routines, devices, days) {
         var agroupedRoutines = [];
 
@@ -62,7 +62,7 @@ angular.module("app").service("routineService", function ($q, $http) {
         return routinePlusDays(agroupedRoutines, days);
 
     };
-
+*/
 
     var routinePlusDays = function (routines, days) {
 
