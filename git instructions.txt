@@ -1,5 +1,5 @@
 clone from branch
-git clone -b <branch> <remote_repo>
+git clone -b <branch> --single-branch <remote_repo>
 
 
 push canche to branch
