@@ -11,6 +11,4 @@ var routineModel = new Schema({
     days: [daysModel.schema]
 });
 
-
-
 module.exports = mongoose.model('routines', routineModel);
