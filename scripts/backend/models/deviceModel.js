@@ -26,4 +26,15 @@ module.exports = mongoose.model('devices', devicesModel);
     "type": 1,
     "watts": 13
 }
+*//*
+{
+	"name": "test",
+    "relay": 0,
+    "action":"Apagado",
+    "class": "primary",
+    "state": 0,
+    "xbeeId": "0013A200_40EAE365",
+    "type": 1,
+    "watts": 13
+}
 */

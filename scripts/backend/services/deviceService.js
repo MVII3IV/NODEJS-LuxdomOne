@@ -21,7 +21,7 @@ var get = function (req, res) {
 var post = function (req, res) {
     var device = new deviceModel(req.body);
 
-    if (!device.name || !device.relay || !device.xbeeId) {
+    if (!device.name || device.relay == null || !device.xbeeId) {
         res.status(400).send('name is required');
     } else {
         device.save(function (err) {
