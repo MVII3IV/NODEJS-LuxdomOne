@@ -22,7 +22,7 @@
                 <tbody>
                     <tr ng-repeat="device in devices">
                         <td editable-text="device.name" onaftersave="updateDeviceFromDB(device)">{{device.name}}</td>
-                        <td editable-text="device.relay" onaftersave="updateDeviceFromDB(device)">{{device.relay}}</td>
+                        <td editable-text="device.relay" onaftersave="updateDeviceFromDB(device)">{{device.relay + 1}}</td>
                         <td editable-text="device.type" onaftersave="updateDeviceFromDB(device)">{{device.type}}</td>
                         <td editable-text="device.watts" onaftersave="updateDeviceFromDB(device)">{{device.watts}}</td>
                         <td editable-text="device.xbeeId" onaftersave="updateDeviceFromDB(device)">{{device.xbeeId}}</td>

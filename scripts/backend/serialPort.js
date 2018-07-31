@@ -36,7 +36,7 @@ portSerial.on('disconnect', function (data) {
 
 //{"deviceId":"0013A200_40EAE365","relay":1,"instruction":0}
 var writeSerial = function (message) {
-    message = JSON.stringify(message) + "\n";
+    message = JSON.stringify(message) + "?";
     portSerial.write(message, function (err) {
         if (err) {
             console.log('Error on write: ', err.message);
@@ -48,12 +48,13 @@ var writeSerial = function (message) {
 };
 
 var sendMessageByDevice = function(device){
-    writeSerial({
+    var data = {
     "id": device.xbeeId, //deviceId
     "rel": device.relay, //relay
     "ins": device.state, //instruction
-    "typ": device.type
-  });
+    "typ": device.type   //device type (1,2)
+    };
+    writeSerial(data);
 };
 
 module.exports = {

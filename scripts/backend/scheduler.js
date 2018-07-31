@@ -7,7 +7,10 @@ var dateFormat = require('dateformat');
 var routineModel = require('./models/routineModel');
 var deviceModel = require('./models/deviceModel.js');
 var daysModel = require('./models/daysModel.js');
-var deviceController = require('./controllers/deviceController.js');
+
+//Services
+var deviceService = require('./services/deviceService.js');
+
 
 var minutes = 1;
 var interval = minutes * 60 * 1000;
@@ -15,35 +18,29 @@ var interval = minutes * 60 * 1000;
 
 setInterval(function () {
     console.log("Checking Routines");
-    q.all([daysModel.find({}).exec(), routineModel.find({}).exec(), deviceModel.find({}).exec()]).then(function (data) {
+    q.all([ routineModel.find({}).exec() ]).then(function (data) {
 
-        var days = data[0];
-        var routines = data[1];
-        var devices = data[2];
+        var routines = data[0];
 
 
-        days = days.filter(function (day) {
-            return day.index == new Date().getDay() && day.active == true;
-        });
+        routines.filter(function(routine){
 
-
-        var routines = routines.filter(function (routine) {
-            return days.some(function (day) {
-                return day.group_id == routine.group_id;
-            })
-        });
-
-
-        devices.filter(function (device) {
-            routines.some(function (routine) {   
-                JSON.parse(routine.devices).some(function (r) {
-                    if (r == device.id) {
-                        actionPerformer(device, routine);
-                    }
-                });
+             var days = false;
+             routine.days.filter(function (day) {
+                if(day.index == new Date().getDay() && day.active == true)
+                    days = true;
             });
-        });
 
+            if(!days) return;
+
+            var devices = routine.devices.filter(function(device){
+                return device.name != null
+            });
+
+            if(!devices) return;
+
+            actionPerformer(routine);
+        });
 
     });
 
@@ -51,15 +48,17 @@ setInterval(function () {
 }, interval);
 
 
-var actionPerformer = function (device, routine) {
-    var currentTime = dateFormat("shortTime");   
-    console.log('Current time: ' + currentTime + ' Scheduled time: ' + routine.time_on );
+var actionPerformer = function (routine) {
+    var currentTime = dateFormat("shortTime");
+    console.log('Current time: ' + currentTime + ' Scheduled time: ' + routine.timeOn);
 
-    if (routine.time_on == currentTime) {
-        deviceController.turnOnDevice(device);
-    }
+    routine.devices.forEach(device => {
+        if (routine.timeOn == currentTime) {
+            deviceService.turnOnDevice(device);            
+        }
 
-    if (routine.time_off == currentTime) {
-        deviceController.turnOffDevice(device);
-    }
+        if (routine.timeOff == currentTime) {
+            deviceService.turnOffDevice(device);
+        }
+    });    
 }

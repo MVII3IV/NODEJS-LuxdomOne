@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 
 //  Models:
 var DeviceModel = require('./scripts/backend/models/deviceModel');
-var TypeModel = require('./scripts/backend/models/typesModel');
+var typesModel = require('./scripts/backend/models/typesModel');
 var routineModel = require('./scripts/backend/models/routineModel');
 var daysModel = require('./scripts/backend/models/daysModel');
 
@@ -41,8 +41,17 @@ var db = mongoose.connection;
 db.on('error', function (err) {
     console.log(err);
 });
+
 db.on('open', function () {
     console.log('>DB connected');
+
+    //If types documents doesnt exists this creates the document
+    mongoose.connection.db.listCollections({name: 'types'})
+    .next(function(err, collinfo) {
+        if (!collinfo) {
+            setupService.types();
+        }
+    });
 });
 
 
@@ -54,11 +63,12 @@ var scheduler = require('./scripts/backend/scheduler.js');
 
 //  Services:
 var routineService = require('./scripts/backend/services/routineService');
+var setupService = require('./scripts/backend/services/setupService');
 
 //  Routes:
 var deviceRouter = require('./scripts/backend/routes/deviceRoutes')(DeviceModel);
-var typesRouter = require('./scripts/backend/routes/typeRouter')(TypeModel);
-var accessRouter = require('./scripts/backend/routes/accessRouter')(TypeModel);
+var typesRouter = require('./scripts/backend/routes/typeRouter')(typesModel);
+var accessRouter = require('./scripts/backend/routes/accessRouter')(typesModel);
 var routinesRouter = require('./scripts/backend/routes/routinesRouter')(routineModel, routineService);
 var daysRoutine = require('./scripts/backend/routes/daysRoutine')(daysModel);
 
