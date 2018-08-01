@@ -81,42 +81,25 @@ var toggleDevice = function (req, result) {
     deviceModel.find({}, function (err, devices) {
 
         device.state = !device.state;
-        device = setupDeviceCCS(device);
-        var index = devices.findIndex(i => i._id.toString() === device._id);
 
-        var query = {
-            _id: device._id
-        };
+        if(device.state)
+            turnOnDevice(device);
+        else
+            turnOffDevice(device);
 
-        deviceModel.update(query, device, function (err, res) {
-            if (err) {
-                console.log(err);
-            } else {
-                devices[index] = device;
-                webSockets.updateFrontEndByDevices(devices);
-                serialPort.sendMessageByDevice(device);
-                result.sendStatus(200);
-            }
-
-        });
-
+        result.sendStatus(200);
+        
     });
 }
+
 
 
 var turnOnDevice = function (device) {
     device.state = true;
     device = setupDeviceCCS(device);
 
+
     //once the devicesModel has been updated, when it returns the promisse its time to update FE
-    /*deviceModel.update(device).then(function () {
-        webSockets.updateFrontEndDevices();
-    });
-
-    serialPort.sendMessageByDevice(device);*/
-
-
-
     var query = {
         _id: device._id
     };
@@ -138,14 +121,7 @@ var turnOffDevice = function (device) {
     device.state = false;
     device = setupDeviceCCS(device);
 
-   
     //once the devicesModel has been updated, when it returns the promisse its time to update FE
-    /*deviceModel.update(device).then(function () {
-        webSockets.updateFrontEndDevices();
-    });
-
-    serialPort.sendMessageByDevice(device);*/
-
     var query = {
         _id: device._id
     };

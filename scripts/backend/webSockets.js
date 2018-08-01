@@ -76,6 +76,9 @@ var updateFrontEndRoutines = function () {
 
 };
 
+
+
+
 var sendMessage = function (msgType, payload) {
   wSocket.send(JSON.stringify({
     type: msgType,
