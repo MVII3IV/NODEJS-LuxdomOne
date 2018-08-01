@@ -2,7 +2,7 @@
     <div class="col-md-3 col-xs-6" ng-repeat="device in devices track by $index" ng-if="device.type == 2">
 
         <!-- panel-featured-primary -->
-        <section class="panel panel-featured-left panel-featured-{{device.class}}" ng-click="activate(device)">
+        <section class="panel panel-featured-left panel-featured-{{device.class}}" ng-click="activate(device)" ng-mousedown='mouseDown()' ng-mouseup="mouseUp()">
             <div class="panel-body">
                 <div class="widget-summary">
                     <div class="widget-summary-col widget-summary-col-icon">
