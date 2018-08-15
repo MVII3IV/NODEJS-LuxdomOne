@@ -3,7 +3,7 @@ var SerialPort = require('serialport');
 var port = '/dev/ttyUSB0';
 
 if (process.platform.includes('win'))
-    port = 'COM3';
+    port = 'COM4';
 
 var portSerial = new SerialPort(port, {
     baudRate: 9600,

@@ -104,6 +104,8 @@ var turnOnDevice = function (device) {
         _id: device._id
     };
 
+    delete device._id;
+
     deviceModel.update(query, device, function (err, res) {
         if (err) {
             console.log(err);
