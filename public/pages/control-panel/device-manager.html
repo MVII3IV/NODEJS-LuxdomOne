@@ -1,74 +1,79 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
-        <h1>
-            Dispositivos
-        </h1>
-    </div>
-
-<br>
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>No. Relevador</th>
-                        <th>Tipo de dispositivo</th>
-                        <th>Consumo (W/h)</th>
-                        <th>Id. dispositivo</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="device in devices">
-                        <td editable-text="device.name" onaftersave="updateDeviceFromDB(device)">{{device.name}}</td>
-                        <td editable-text="device.relay" onaftersave="updateDeviceFromDB(device)">{{device.relay + 1}}</td>
-                        <td editable-text="device.type" onaftersave="updateDeviceFromDB(device)">{{device.type}}</td>
-                        <td editable-text="device.watts" onaftersave="updateDeviceFromDB(device)">{{device.watts}}</td>
-                        <td editable-text="device.xbeeId" onaftersave="updateDeviceFromDB(device)">{{device.xbeeId}}</td>
-                        <td>
-                            <button class="btn btn-danger" ng-click="removeDeviceFromDB(device)">
-                                <i class="fa fa-times" aria-hidden="true"></i> &nbsp Eliminar
-                            </button>
-                        </td>
-                    </tr>
-
-                    
-                    <tr>
-                        <td>
-                            <input type="text" name="name" class="form-control" placeholder="Escribe el nombre..." required ng-model="newDevice.name"
-                            />
-                        </td>
-                        <td>
-                            <input type="number" min="1" max="8" class="form-control" placeholder="Escribe el numero de relevador..." required ng-model="newDevice.relay"
-                            />
-                        </td>
-                        <td>
-                            <select class="form-control" ng-model="newDevice.type" ng-change="" ng-options="type as type.name for type in types"> 
-                                <option value="">Seleccion el tipo de dispositivo</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" min="1" max="200" class="form-control" placeholder="Escribe el consumo en watts..." required ng-model="newDevice.watts"/>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" placeholder="xxxxxxxx_xxxxxxxx" required ng-model="newDevice.xbeeId"/>
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="registerNewDevice(newDevice)">
-                              <i class="fa fa-plus" aria-hidden="true"></i>
-                              &nbsp Agregar
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="panel-heading">
+            <h1>
+                Dispositivos
+            </h1>
         </div>
-    </div>
-
-
+    
     
     <br>
-
-</div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+    
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>No. Relevador</th>
+                            <th>Tipo de dispositivo</th>
+                            <th>Consumo (W/h)</th>
+                            <th>Id. dispositivo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                        <tr ng-repeat="device in devices">
+                            <td><a editable-text="device.name" onaftersave="updateDeviceFromDB(device)">{{device.name}}</a></td>
+                            <td><a editable-text="device.relay" onaftersave="updateDeviceFromDB(device)">{{device.relay + 1}}</a></td>
+                            <td><a editable-text="device.type" onaftersave="updateDeviceFromDB(device)">{{device.type}}</a></td>
+                            <td><a editable-text="device.watts" onaftersave="updateDeviceFromDB(device)">{{device.watts}}</a></td>
+                            <td><a editable-text="device.xbeeId" onaftersave="updateDeviceFromDB(device)">{{device.xbeeId}}</a></td>
+                            <td>
+                                <button class="btn btn-danger" ng-click="removeDeviceFromDB(device)">
+                                    <i class="fa fa-times" aria-hidden="true"></i> &nbsp Eliminar
+                                </button>
+                            </td>
+                        </tr>
+    
+                        
+                        <tr>
+                            <td>
+                                <input type="text" name="name" class="form-control" placeholder="Escribe el nombre..." required ng-model="newDevice.name"
+                                />
+                            </td>
+                            <td>
+                                <input type="number" min="1" max="8" class="form-control" placeholder="Escribe el numero de relevador..." required ng-model="newDevice.relay"
+                                />
+                            </td>
+                            <td>
+                                <select class="form-control" ng-model="newDevice.type" ng-change="" ng-options="type as type.name for type in types"> 
+                                    <option value="">Seleccion el tipo de dispositivo</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" min="1" max="200" class="form-control" placeholder="Escribe el consumo en watts..." required ng-model="newDevice.watts"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" placeholder="xxxxxxxx_xxxxxxxx" required ng-model="newDevice.xbeeId"/>
+                            </td>
+    
+                            <td>
+                                <button type="button" class="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="registerNewDevice(newDevice)">
+                                  <i class="fa fa-plus" aria-hidden="true"></i>
+                                  &nbsp Agregar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+    
+                </table>
+            </div>
+        </div>
+    
+    
+        
+        <br>
+    
+    </div>
+    

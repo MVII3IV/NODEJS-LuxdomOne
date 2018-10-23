@@ -18,6 +18,8 @@ angular.module('app').controller("accessController", ['$scope', '$http', 'wsClie
                 }).catch(function (err) {
                     console.log(err);
                 });
+            }else{
+                $scope.timeDiff = 0;
             }           
         }
 
